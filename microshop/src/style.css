@@ -1,4 +1,4 @@
-body {
+/* body {
   font-family: Arial, sans-serif;
   margin: 20px;
   background: #f9f9f9;
@@ -76,4 +76,120 @@ body {
 
 .btn:hover {
   background: #0056b3;
+} */
+
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f9f9f9;
+}
+
+#cart-logo {
+  width: 40px;
+}
+
+.cart {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.2rem;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 20px;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+.cart-btn {
+  font-size: 1rem;
+  padding: 6px 12px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.cart-btn:hover { background: #1e7e34; }
+
+.reset-btn {
+  font-size: 1rem;
+  padding: 6px 12px;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.reset-btn:hover { background: #a71d2a; }
+
+.products {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .products { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+  .products { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 599px) {
+  .products { grid-template-columns: 1fr; }
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.btn {
+  background: #007bff;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn:hover { background: #0056b3; }
+
+/* Cart (products list) */
+.cart-list {
+  margin-top: 20px;
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  display: none;
+}
+
+.cart-list.active {
+  display: block;
+}
+
+.cart-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+.cart-item:last-child {
+  border-bottom: none;
 }
