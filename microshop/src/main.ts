@@ -1,29 +1,8 @@
 import './style.css'
+import { products } from './products';
 
-// const cartCountEl = document.getElementById("cart-count");
-// const buttons = document.querySelectorAll<HTMLButtonElement>(".add-to-cart");
-// const addedProduct = document.querySelector
-
-// // Downloading data from localStorage
-// let cartCount: number = parseInt(localStorage.getItem("cartCount") || "0");
-// if (cartCountEl) {
-//   cartCountEl.textContent = cartCount.toString();
-  
-// }
-
-
-// // Click handlers
-// buttons.forEach(button => {
-//   button.addEventListener("click", () => {
-//     cartCount++;
-//     if (cartCountEl) {
-//       cartCountEl.textContent = cartCount.toString();
-//     }
-//     localStorage.setItem("cartCount", cartCount.toString());
-//   });
-// });
-
-interface Product {
+// Type for products
+type Product = {
   id: number;
   title: string;
   description: string;
@@ -31,27 +10,22 @@ interface Product {
   image: string;
 }
 
-// Products
-const products: Product[] = [
-  { id: 1, title: "Товар 1", description: "Описание товара 1", price: 1000, image: "https://placehold.co/200x200" },
-  { id: 2, title: "Товар 2", description: "Описание товара 2", price: 1500, image: "https://placehold.co/200x200" },
-  { id: 3, title: "Товар 3", description: "Описание товара 3", price: 2000, image: "https://placehold.co/200x200" },
-  { id: 3, title: "Товар 4", description: "Описание товара 4", price: 2000, image: "https://placehold.co/200x200" },
-];
-
 // DOM-elements
-const cartCountEl = document.getElementById("cart-count");
-const resetBtn = document.getElementById("reset-cart");
-const showCartBtn = document.getElementById("show-cart");
-const productsContainer = document.getElementById("products");
-const cartList = document.getElementById("cart-list");
+const cartCountEl = document.querySelector<HTMLElement>("#cart-count");
+const resetBtn = document.querySelector<HTMLButtonElement>("#reset-cart");
+const showCartBtn = document.querySelector<HTMLButtonElement>("#show-cart");
+const productsContainer = document.querySelector<HTMLElement>("#products");
+const cartList = document.querySelector<HTMLButtonElement>("#cart-list");
 
 // Downloading cart data from localStorage
 let cartItems: Product[] = JSON.parse(localStorage.getItem("cartItems") ?? "[]");
 let cartCount: number = cartItems.length;
 
-if (cartCountEl) {
-  cartCountEl.textContent = cartCount.toString();
+// Updating cart's counter "function"
+function updateCartCountEl() {
+  if (cartCountEl) {
+    cartCountEl.textContent = cartCount.toString();
+  }
 }
 
 // Cards rendering function
@@ -61,10 +35,11 @@ function renderProducts(items: Product[]) {
 
   items.forEach(product => {
     const card = document.createElement("div");
-    card.className = "card";
+    card.classList.add("card");
 
     // Image
     const img = document.createElement("img");
+    img.classList.add("card-img");
     img.src = product.image;
     img.alt = product.title;
 
@@ -78,14 +53,17 @@ function renderProducts(items: Product[]) {
 
     // Price
     const price = document.createElement("div");
-    price.className = "price";
-    price.textContent = `${product.price} $`;
+    price.classList.add("price");
+    price.textContent = `$${product.price}`;
 
     // Button
     const button = document.createElement("button");
-    button.className = "btn add-to-cart";
+    button.classList.add("btn add-to-cart");
     button.dataset.id = product.id.toString();
     button.textContent = "В корзину";
+
+    // Add to cart (EVENT)
+    button.addEventListener("click", () => addToCart(product));
 
     // Card assembly
     card.appendChild(img);
@@ -96,17 +74,19 @@ function renderProducts(items: Product[]) {
 
     productsContainer.appendChild(card);
 
-    // Add to cart (EVENT)
-    button.addEventListener("click", () => {
+    // Add to cart function
+    function addToCart(product: Product) {
       cartItems.push(product);
       cartCount++;
-      if (cartCountEl) cartCountEl.textContent = cartCount.toString();
+      updateCartCountEl();
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    });
+      renderCart();
+      
+    }
   });
 }
 
-// Render cart function
+// Cart rendering function
 function renderCart() {
   if (!cartList) return;
   cartList.innerHTML = "";
@@ -118,27 +98,25 @@ function renderCart() {
   } else {
     cartItems.forEach(item => {
       const div = document.createElement("div");
-      div.className = "cart-item";
-      div.textContent = `${item.title} — ${item.price} ₽`;
+      div.classList.add("cart-item");
+      div.textContent = `${item.title} — $${item.price}`;
       cartList.appendChild(div);
     });
   }
 }
 
-// Show cart (EVENT)
-showCartBtn?.addEventListener("click", () => {
+// Show/hide cart function
+function showCart() {
   if (!cartList || !showCartBtn) return;
 
-  cartList.classList.toggle("active");
-
-  if (cartList.classList.contains("active")) {
-    showCartBtn.textContent = "Скрыть корзину";
-  } else {
-    showCartBtn.textContent = "Показать корзину";
-  }
+  const isActive = cartList.classList.toggle("active");
+  showCartBtn.textContent = isActive ? "Скрыть корзину" : "Показать корзину";
 
   renderCart();
-});
+}
+
+// Show/hide cart (EVENT)
+showCartBtn?.addEventListener("click", showCart);
 
 // Clear the cart
 resetBtn?.addEventListener("click", () => {
@@ -149,5 +127,9 @@ resetBtn?.addEventListener("click", () => {
   renderCart();
 });
 
+
 // Products rendering
+updateCartCountEl();  // Updating cart's counter
 renderProducts(products);
+
+
